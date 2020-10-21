@@ -74,11 +74,8 @@ def vstate_to_coe(vect1, vect2):
 
 
 """
-
 Orbital Elements to State Vector
-
 """
-
 
 def coe_to_vstate(h, e, RA, inc, w, theta):
     R_pf = (h ** 2.0 / mu) * (1 / (1 + e * np.cos(theta))) * np.array([np.cos(theta), np.sin(theta), 0.0])
@@ -109,12 +106,8 @@ def coe_to_vstate(h, e, RA, inc, w, theta):
 
 
 """
-
 Kepler Equation
-
-
 """
-
 
 def kepler_eliptic(e, M):
     if M < np.pi:
@@ -137,11 +130,8 @@ def kepler_eliptic(e, M):
 
 
 """
-
 SOLAR SYSTEM 
-
 """
-
 
 def julian_date(t_ephemeris, t):                            # t in days
     t_julian = (t_ephemeris - 2451545.0) / 36525.0
@@ -162,7 +152,6 @@ planets_elements function returns Keplerian Elements for each planet
     o_p     [rad]
     M_p     [rad]
 """
-
 
 def planets_elements(planet, julian_time):
     a_p = planet[0] + (planet[1] * julian_time)         # [au]
@@ -202,19 +191,14 @@ def planet_state(planet, T_ephemeris, t):                   # t in days
 
     return R_planet, V_planet
 
-
 """
-
 LAMBERT'S PROBLEM: Calculation of the orbit between two given points
 
         R1 [km] Initial position of spacecraft in its trajectory. Coincides with planet position at time t1
         R2 [km] Desired position of spacecraft at the end. Coincides with planet position at time t2
-
 """
 
-
 # Stumpff Functions
-
 def stumpfS(z):
     if z > 0:
         S = (np.sqrt(z) - np.sin(np.sqrt(z))) / (np.sqrt(z)) ** 3
@@ -318,11 +302,9 @@ def lambert_problem(R1, R2, fly_time):                                  # fly_ti
 
     return V1, V2
 
-
 '''
-
 Function which returns one segment of the mission
-
+    
     R_planet1, V_planet1       Defines the planet state vector at the beginning of the transference 
     R_planet2, V_planet2       Defines the planet state vector at the end of the transference
     V_departure                Defines the spacecraft heliocentric velocity when it leaves the planet at the beginning 
@@ -334,7 +316,6 @@ Function which returns one segment of the mission
     DV_arrival                 Defines the spacecraft planetocentric velocity when it arrives the planet at the end of
                                 the transference
 '''
-
 
 def segment_trajectory(planet_1, planet_2, T_ephem_begin, t_0, t_1, fly_time):
     R_planet1, V_planet1 = planet_state(planet_1, T_ephem_begin, t_0)               # [km]
@@ -349,15 +330,10 @@ def segment_trajectory(planet_1, planet_2, T_ephem_begin, t_0, t_1, fly_time):
 
 
 """
-
 GRAVITY ASSIST MANEUVER: rotation matrix for velocity and position vectors are calculated
-
 """
 
-
 # Function which returns the periapse radius
-
-
 def r_periapse(v_arrival, v_departure, K_planet):
     # v_arrival defines the planetocentric velocity of the spacecraft at the inbound crossing point of the flyby planet
     # v_departure defines the planetocentric velocity of the spacecraft at the outbound crossing point of this planet
@@ -394,7 +370,6 @@ def rotation_vel_matrix(r, v, K_planet, r_planet):
 
 
 """
-
 fly_by function will describe the fly by 
 
         r_1 defines spacecraft position at the beginning of the fly by in planetocentric coors
@@ -405,9 +380,7 @@ fly_by function will describe the fly by
 
         R_2 defines spacecraft position at the end of the fly by in heliocentric coors
         V_2 defines spacecraft velocity at the end of the fly by in heliocentric coors
-
 """
-
 
 def fly_by(r_1, v_1, V_planet, K_planet, r_planet):
     v_infinity = np.linalg.norm(v_1)
@@ -419,17 +392,3 @@ def fly_by(r_1, v_1, V_planet, K_planet, r_planet):
     rot_angle = rot_vel_angle(v_infinity, K_planet, r_planet)
 
     return rot_angle, V_2
-
-
-"""
-R_Earth, V_Earth = planet_state(Earth, 2450394.500)
-R_Earth1, V_Earth1 = planet_state(Earth, 2452879.000)
-R_Mars, V_Mars = planet_state(Mars, 2450703.500)
-
-print("Earth, first case")
-print(R_Earth, V_Earth)
-print("Earth, second case")
-print(R_Earth1, V_Earth1)
-print("Mars, case")
-print(R_Mars, V_Mars)
-"""
