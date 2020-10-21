@@ -6,13 +6,13 @@ from core import *
 t_0 = 0.0
 
 T_begin = 2459400.0     # 4th July 2021
-T_end = 2459650.0       # 11th March 2022                 # 2459740.0       # 9th June 2022
+T_end = 2459650.0       # 11th March 2022                 
 
 T_tof_1 = 80            # 80 days of flight
 T_tof_1_end = 325       # 325 days of flight
 
 T_tof_2 = 650           # 650 days of flight
-T_tof_2_end = 950      # 1100 days of flight
+T_tof_2_end = 950       # 1100 days of flight
 
 
 def optimization_task(planet_1, planet_2, r_planet2, K_planet2, planet_3, T_beg, T_fin, T_tof_1_beg, T_tof_1_fin,
@@ -54,16 +54,8 @@ def optimization_task(planet_1, planet_2, r_planet2, K_planet2, planet_3, T_beg,
             for k in range(len(Z[0, 0, :])):
                 print("TIEMPO DE VUELO 2")
                 print(Z[0, 0, k])
-                R_2dep, V_2dep, R_3arr, V_3arr, V_hdep_1, DV_dep_1, V_harr_2, DV_arr_2 = segment_trajectory(planet_2,
-                                                                                                            planet_3,
-                                                                                                            X[0, i, 0],
-                                                                                                            t_0 + Y[
-                                                                                                                j, 0, 0],
-                                                                                                            t_0 + Y[
-                                                                                                                j, 0, 0]
-                                                                                                            + Z[
-                                                                                                                0, 0, k],
-                                                                                                            Z[0, 0, k])
+                R_2dep, V_2dep, R_3arr, V_3arr, V_hdep_1, DV_dep_1, V_harr_2, DV_arr_2 = segment_trajectory(planet_2, planet_3, X[0, i, 0], t_0 + Y[j, 0, 0],
+                                                                                                            t_0 + Y[j, 0, 0] + Z[0, 0, k], Z[0, 0, k])
 
                 DV0_departure_1[j, k] = np.linalg.norm(DV_dep_1)
                 DV_arrival_planet_2[j, k] = np.linalg.norm(DV_arr_2)
@@ -77,17 +69,12 @@ def optimization_task(planet_1, planet_2, r_planet2, K_planet2, planet_3, T_beg,
                     DV_flyby_mag = np.linalg.norm(DV_flyby)
                     DV_1_flyby[i, j, k] = DV_flyby_mag
                     fi_max[i, j, k] = 0
-                    # print("radio de periapsis", r_p)
-                    # print("Pericentral radius was BIGGER than planet radius")
                 elif r_p <= r_planet2:
                     r_angle, V_flyby = fly_by(R_2arr, DV_arr_1, V_2dep, K_planet2, r_planet2)
                     DV_flyby = V_hdep_1 - V_flyby
                     DV_flyby_mag = np.linalg.norm(DV_flyby)
                     DV_1_flyby[i, j, k] = DV_flyby_mag
                     fi_max[i, j, k] = r_angle
-                    # print("Maximo angulo de rotacion,", r_angle)
-                    # print("radio periapsis", r_p)
-                    # print("Pericentral radus was SMALLER than planet radius")
                 DV_total[i, j, k] = DV0_departure[i, j] + DV_1_flyby[i, j, k] + DV_arrival_planet_2[j, k]
     """
     plt.figure()
@@ -215,16 +202,8 @@ def optimization_task(planet_1, planet_2, r_planet2, K_planet2, planet_3, T_beg,
             for k in range(len(Z[0, 0, :])):
                 # print("TIEMPO DE VUELO 2")
                 # print(Z[0, 0, k])
-                R_2dep, V_2dep, R_3arr, V_3arr, V_hdep_1, DV_dep_1, V_harr_2, DV_arr_2 = segment_trajectory(planet_2,
-                                                                                                            planet_3,
-                                                                                                            X[0, i, 0],
-                                                                                                            t_0 + Y[
-                                                                                                                j, 0, 0],
-                                                                                                            t_0 + Y[
-                                                                                                                j, 0, 0]
-                                                                                                            + Z[
-                                                                                                                0, 0, k],
-                                                                                                            Z[0, 0, k])
+                R_2dep, V_2dep, R_3arr, V_3arr, V_hdep_1, DV_dep_1, V_harr_2, DV_arr_2 = segment_trajectory(planet_2, planet_3, X[0, i, 0], t_0 + Y[j, 0, 0],
+                                                                                                            t_0 + Y[j, 0, 0] + Z[0, 0, k], Z[0, 0, k])
 
                 DV0_departure_1[j, k] = np.linalg.norm(DV_dep_1)
                 DV_arrival_planet_2[j, k] = np.linalg.norm(DV_arr_2)
@@ -238,17 +217,12 @@ def optimization_task(planet_1, planet_2, r_planet2, K_planet2, planet_3, T_beg,
                     DV_flyby_mag = np.linalg.norm(DV_flyby)
                     DV_1_flyby[i, j, k] = DV_flyby_mag
                     fi_max[i, j, k] = 0
-                    # print("radio de periapsis", r_p)
-                    # print("Pericentral radius was BIGGER than planet radius")
                 elif r_p <= r_planet2:
                     r_angle, V_flyby = fly_by(R_2arr, DV_arr_1, V_2dep, K_planet2, r_planet2)
                     DV_flyby = V_hdep_1 - V_flyby
                     DV_flyby_mag = np.linalg.norm(DV_flyby)
                     DV_1_flyby[i, j, k] = DV_flyby_mag
                     fi_max[i, j, k] = r_angle
-                    # print("Maximo angulo de rotacion,", r_angle)
-                    # print("radio periapsis", r_p)
-                    # print("Pericentral radus was SMALLER than planet radius")
                 DV_total[i, j, k] = DV0_departure[i, j] + DV_1_flyby[i, j, k] + DV_arrival_planet_2[j, k]
     """
     plt.figure()
