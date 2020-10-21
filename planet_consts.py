@@ -4,8 +4,8 @@ SUN Consts --------------------
 
 # General Consts
 
-M_Sun = 1.98 * 10 ** 30     # Mass [kg]
-K_Sun = 1.327124 * 10 ** 11    # Gravitational Parameter [km3/s2]
+M_Sun = 1.98 * 10 ** 30         # Mass [kg]
+K_Sun = 1.327124 * 10 ** 11     # Gravitational Parameter [km3/s2]
 
 
 """
@@ -14,22 +14,22 @@ K_Sun = 1.327124 * 10 ** 11    # Gravitational Parameter [km3/s2]
 
 # Keplerian Elements
 
-ao_M = 0.38709843           # [au]
-da_M = 0.0                  # [au/cty]
-eo_M = 0.20563661           # [rad]
-de_M = 0.00002123           # [rad/cty]
-Io_M = 7.00559432           # [º]
-dI_M = -0.00590158          # [º/cty]
-Lo_M = 252.25166724         # [º]
-dL_M = 149472.67486623      # [º/cty]
-wo_M = 77.45771895          # [º]
-dw_M = 0.15940013           # [º/cty]
-Oo_M = 48.33961819          # [º]
-dO_M = -0.12214182          # [º/cty]
-b_M = 0.0                   # [º/cty2]
-c_M = 0.0                   # [º]
-s_M = 0.0                   # [º]
-f_M = 0.0                   # [º/cty]
+ao_M = 0.38709843               # [au]
+da_M = 0.0                      # [au/cty]
+eo_M = 0.20563661               # [rad]
+de_M = 0.00002123               # [rad/cty]
+Io_M = 7.00559432               # [º]
+dI_M = -0.00590158              # [º/cty]
+Lo_M = 252.25166724             # [º]
+dL_M = 149472.67486623          # [º/cty]
+wo_M = 77.45771895              # [º]
+dw_M = 0.15940013               # [º/cty]
+Oo_M = 48.33961819              # [º]
+dO_M = -0.12214182              # [º/cty]
+b_M = 0.0                       # [º/cty2]
+c_M = 0.0                       # [º]
+s_M = 0.0                       # [º]
+f_M = 0.0                       # [º/cty]
 
 Mercury = [ao_M, da_M, eo_M, de_M, Io_M, dI_M, Lo_M, dL_M, wo_M, dw_M, Oo_M, dO_M, b_M, c_M, s_M, f_M]
 
