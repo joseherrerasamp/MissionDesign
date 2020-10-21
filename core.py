@@ -6,11 +6,11 @@ from planet_consts import *
 mu = K_Sun
 
 tolerance = 10 ** (-8)
-au = 1.496 * 10 ** 8
-h_atm = 600  # [km]
+au = 1.496 * 10 ** 8                            # km in 1 Astronomical Units
+h_atm = 600                                     # [km]
 
 # Decision parameter for Lambert's Problem
-kind_orbit = 1  # 1: Prograde Orbit / 2: Retrograde Orbit
+kind_orbit = 1                                  # 1: Prograde Orbit / 2: Retrograde Orbit
 
 """
 Some useful generic functions
@@ -23,7 +23,6 @@ def romin(r_planet):
 
 """
 State Vector to Orbital Elements
-
     h       [km2 / s]
     i       [rad]
     RA      [rad]
@@ -144,7 +143,7 @@ SOLAR SYSTEM
 """
 
 
-def julian_date(t_ephemeris, t):  # t in days
+def julian_date(t_ephemeris, t):                            # t in days
     t_julian = (t_ephemeris - 2451545.0) / 36525.0
     t_julian = t_julian + (t / 36525.0)
 
@@ -152,9 +151,7 @@ def julian_date(t_ephemeris, t):  # t in days
 
 
 """
-
-planets_elements function will return Keplerian Elements for each planet
-
+planets_elements function returns Keplerian Elements for each planet
     h_p     [km2/s]
     a_p     [km]
     e_p     [rad]
@@ -164,29 +161,28 @@ planets_elements function will return Keplerian Elements for each planet
     w_p     [rad]
     o_p     [rad]
     M_p     [rad]
-
 """
 
 
 def planets_elements(planet, julian_time):
-    a_p = planet[0] + (planet[1] * julian_time)  # [au]
-    e_p = planet[2] + (planet[3] * julian_time)  # [rad]
-    I_p = planet[4] + (planet[5] * julian_time)  # [º]
-    L_p = planet[6] + (planet[7] * julian_time)  # [º]
-    w1_p = planet[8] + (planet[9] * julian_time)  # [º]
-    O_p = planet[10] + (planet[11] * julian_time)  # [º]
+    a_p = planet[0] + (planet[1] * julian_time)         # [au]
+    e_p = planet[2] + (planet[3] * julian_time)         # [rad]
+    I_p = planet[4] + (planet[5] * julian_time)         # [º]
+    L_p = planet[6] + (planet[7] * julian_time)         # [º]
+    w1_p = planet[8] + (planet[9] * julian_time)        # [º]
+    O_p = planet[10] + (planet[11] * julian_time)       # [º]
 
-    # As every parameter should be given in radians, all the previous ones should be transformed into radians
+    # Every parameter should be given in radians
     # Also a_p should be transformed to [km] in order to have the same units
 
-    a_p = a_p * au  # [km]
-    h_p = np.sqrt(mu * a_p * (1 - e_p ** 2))  # [km2/s]
-    I_p = np.radians(I_p)  # [rad]
-    L_p = np.radians(L_p)  # [rad]
-    w1_p = np.radians(w1_p)  # [rad]
-    O_p = np.radians(O_p)  # [rad]
+    a_p = a_p * au                                      # [km]
+    h_p = np.sqrt(mu * a_p * (1 - e_p ** 2))            # [km2/s]
+    I_p = np.radians(I_p)                               # [rad]
+    L_p = np.radians(L_p)                               # [rad]
+    w1_p = np.radians(w1_p)                             # [rad]
+    O_p = np.radians(O_p)                               # [rad]
 
-    w_p = w1_p - O_p  # [rad]
+    w_p = w1_p - O_p                                    # [rad]
 
     M_p = L_p - w1_p + np.radians(planet[12] * (julian_time ** 2.0)) + np.radians(planet[13]) * (
         np.cos(np.radians(planet[15] * julian_time))) + np.radians(planet[14]) * (
@@ -195,7 +191,7 @@ def planets_elements(planet, julian_time):
     return h_p, a_p, e_p, I_p, L_p, w1_p, w_p, O_p, M_p
 
 
-def planet_state(planet, T_ephemeris, t):  # t in days
+def planet_state(planet, T_ephemeris, t):                   # t in days
     t_julian = julian_date(T_ephemeris, t)
 
     h_p, a_p, e_p, I_p, L_p, w1_p, w_p, O_p, M_p = planets_elements(planet, t_julian)
@@ -241,19 +237,19 @@ def stumpfC(z):
     return C
 
 
-def lambert_problem(R1, R2, fly_time):  # fly_time is given in days
-    R1_norm = np.linalg.norm(R1)  # [km]
-    R2_norm = np.linalg.norm(R2)  # [km]
+def lambert_problem(R1, R2, fly_time):                                  # fly_time is given in days
+    R1_norm = np.linalg.norm(R1)                                        # [km]
+    R2_norm = np.linalg.norm(R2)                                        # [km]
 
     cross_product = np.cross(R1, R2)
-    theta_lambert = np.arccos(np.dot(R1, R2) / (R1_norm * R2_norm))  # [rad]
+    theta_lambert = np.arccos(np.dot(R1, R2) / (R1_norm * R2_norm))     # [rad]
 
-    if kind_orbit == 1:  # 1: prograde orbit
+    if kind_orbit == 1:                                                 # 1: prograde orbit
         if cross_product[2] < 0:
-            theta_lambert = 2 * np.pi - theta_lambert  # [rad]
-    elif kind_orbit == 2:  # 2: retrograde orbit
+            theta_lambert = 2 * np.pi - theta_lambert                   # [rad]
+    elif kind_orbit == 2:                                               # 2: retrograde orbit
         if cross_product[2] >= 0:
-            theta_lambert = 2 * np.pi - theta_lambert  # [rad]
+            theta_lambert = 2 * np.pi - theta_lambert                   # [rad]
 
     A = np.sin(theta_lambert) * np.sqrt((R1_norm * R2_norm) / (1 - np.cos(theta_lambert)))
 
@@ -341,13 +337,13 @@ Function which returns one segment of the mission
 
 
 def segment_trajectory(planet_1, planet_2, T_ephem_begin, t_0, t_1, fly_time):
-    R_planet1, V_planet1 = planet_state(planet_1, T_ephem_begin, t_0)  # [km]
-    R_planet2, V_planet2 = planet_state(planet_2, T_ephem_begin, t_1)  # [km]
+    R_planet1, V_planet1 = planet_state(planet_1, T_ephem_begin, t_0)               # [km]
+    R_planet2, V_planet2 = planet_state(planet_2, T_ephem_begin, t_1)               # [km]
 
-    V_departure, V_arrival = lambert_problem(R_planet1, R_planet2, fly_time)  # [km/s]
+    V_departure, V_arrival = lambert_problem(R_planet1, R_planet2, fly_time)        # [km/s]
 
-    DV_departure = V_departure - V_planet1  # [km/s]
-    DV_arrival = V_arrival - V_planet2  # [km/s]
+    DV_departure = V_departure - V_planet1                                          # [km/s]
+    DV_arrival = V_arrival - V_planet2                                              # [km/s]
 
     return R_planet1, V_planet1, R_planet2, V_planet2, V_departure, DV_departure, V_arrival, DV_arrival
 
@@ -383,14 +379,14 @@ def rot_vel_angle(v_infinity, K_planet, r_planet):  # r, v are given in planetoc
 
 
 def rotation_vel_matrix(r, v, K_planet, r_planet):
-    c1 = r[1] * v[2] - r[2] * v[1]  # [km2/s]
-    c2 = r[2] * v[0] - r[0] * v[2]  # [km2/s]
-    c3 = r[0] * v[1] - r[1] * v[0]  # [km2/s]
-    c = np.sqrt((c1 ** 2.0) + (c2 ** 2.0) + (c3 ** 2.0))  # [km2/s]
+    c1 = r[1] * v[2] - r[2] * v[1]                              # [km2/s]
+    c2 = r[2] * v[0] - r[0] * v[2]                              # [km2/s]
+    c3 = r[0] * v[1] - r[1] * v[0]                              # [km2/s]
+    c = np.sqrt((c1 ** 2.0) + (c2 ** 2.0) + (c3 ** 2.0))        # [km2/s]
 
     v_infinity = np.linalg.norm(v)
 
-    fi = rot_vel_angle(v_infinity, K_planet, r_planet)  # [rad]
+    fi = rot_vel_angle(v_infinity, K_planet, r_planet)          # [rad]
 
     return np.array([[np.cos(fi), (c3 / c) * np.sin(fi), -(c2 / c) * np.sin(fi)],
                      [-(c3 / c) * np.sin(fi), np.cos(fi), (c1 / c) * np.sin(fi)],
